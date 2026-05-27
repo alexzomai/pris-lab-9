@@ -2,7 +2,7 @@
 
 > Поведенческая диаграмма: полный путь комментария от публикации до вынесения решения по модерации.
 
-## Сценарий 1 — Автоматическая блокировка токсичного комментария
+## Сценарий 1 — Пограничный случай: комментарий помещается в очередь (score=0.90)
 
 ```mermaid
 sequenceDiagram
@@ -43,14 +43,14 @@ sequenceDiagram
     Note over KS,MODS: Применение бизнес-правил
 
     KS->>MODS: Consume scored {comment_id, score_toxic=0.90}
-    MODS->>MODS: Проверка порога:\n0.90 ≥ 0.92? → НЕТ\n0.90 ≥ 0.70? → ДА → pending_review
-    
-    Note over MODS: score=0.90, но < 0.92 → пограничный случай
+    MODS->>MODS: 0.90 >= 0.92? НЕТ (не автоблок)\n0.90 >= 0.70? ДА → pending_review
+
+    Note over MODS: Пограничный случай: score ниже порога автоблока
 
     MODS->>PG: UPDATE comment SET status='pending_review'
     MODS->>PG: INSERT moderation_action\n(type='auto_queue', is_automatic=true)
 
-    Note over User,SN: Комментарий помещён в очередь ручной проверки
+    Note over User,SN: Комментарий ждёт ручной проверки модератором
 ```
 
 ## Сценарий 2 — Явно токсичный (score ≥ 0.92), автоблок
@@ -111,11 +111,12 @@ sequenceDiagram
     participant SIS as Sentiment Inference Service
     participant RD as Redis Cache
     participant PG as PostgreSQL
+    participant KS as Kafka (comments.scored)
 
     KR->>SIS: Consume {comment_id=9002, text="[spam текст]"}
     SIS->>RD: GET cache(sha256("[spam текст]"))
     RD-->>SIS: HIT {label='toxic', score_toxic=0.96}
     Note over SIS: ONNX НЕ вызывается → экономия ~50 мс
     SIS->>PG: INSERT prediction (из кэша, inference_time_ms=2)
-    SIS->>KR: Produce to comments.scored
+    SIS->>KS: Produce to comments.scored
 ```

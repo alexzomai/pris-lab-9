@@ -51,9 +51,9 @@ flowchart LR
     U -->|инициирует| UC2
 
     %% Связи UC-01
-    UC1 -.->|"<<include>>"| UC14
-    UC14 -.->|"<<extend>>"| UC15
-    UC14 -.->|"<<extend>>"| UC16
+    UC1 -.->|"«include»"| UC14
+    UC14 -.->|"«extend»"| UC15
+    UC14 -.->|"«extend»"| UC16
 
     %% Модератор
     MOD -->|выполняет| UC3
@@ -61,7 +61,7 @@ flowchart LR
     MOD -->|выполняет| UC5
     MOD -->|выполняет| UC6
 
-    UC4 -.->|"<<extend>>"| UC7
+    UC4 -.->|"«extend»"| UC7
 
     %% Старший модератор
     SMOD -->|выполняет| UC7

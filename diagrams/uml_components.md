@@ -5,52 +5,52 @@
 
 ```mermaid
 flowchart LR
-    subgraph ClientLayer["<<layer>>\nКлиентский уровень"]
+    subgraph ClientLayer["«layer»\nКлиентский уровень"]
         direction TB
-        WEB["<<component>>\nWeb/Mobile App\n─────────────\n+ sendComment()\n+ viewFeed()"]
-        ADM["<<component>>\nAdmin Dashboard\n─────────────\n+ reviewQueue()\n+ viewAnalytics()\n+ resolveAppeal()"]
+        WEB["«component»\nWeb/Mobile App\n─────────────\n+ sendComment()\n+ viewFeed()"]
+        ADM["«component»\nAdmin Dashboard\n─────────────\n+ reviewQueue()\n+ viewAnalytics()\n+ resolveAppeal()"]
     end
 
-    subgraph GatewayLayer["<<layer>>\nAPI-шлюз"]
-        GW["<<component>>\nAPI Gateway\n(nginx)\n─────────────\n+ route()\n+ rateLimit()\n+ authenticate()"]
+    subgraph GatewayLayer["«layer»\nAPI-шлюз"]
+        GW["«component»\nAPI Gateway\n(nginx)\n─────────────\n+ route()\n+ rateLimit()\n+ authenticate()"]
     end
 
-    subgraph CoreServices["<<layer>>\nОсновные сервисы"]
+    subgraph CoreServices["«layer»\nОсновные сервисы"]
         direction TB
-        CIS["<<component>>\nComment Ingestion Service\n─────────────\n+ receiveComment()\n+ validateInput()\n+ publishToKafka()"]
+        CIS["«component»\nComment Ingestion Service\n─────────────\n+ receiveComment()\n+ validateInput()\n+ publishToKafka()"]
 
-        SIS["<<component>>\nSentiment Inference Service\n─────────────\n+ consumeFromKafka()\n+ checkCache()\n+ runInference()\n+ savePrediction()\n+ publishResult()"]
+        SIS["«component»\nSentiment Inference Service\n─────────────\n+ consumeFromKafka()\n+ checkCache()\n+ runInference()\n+ savePrediction()\n+ publishResult()"]
 
-        MODS["<<component>>\nModeration Service\n─────────────\n+ applyThreshold()\n+ updateStatus()\n+ assignToQueue()\n+ processAppeal()"]
+        MODS["«component»\nModeration Service\n─────────────\n+ applyThreshold()\n+ updateStatus()\n+ assignToQueue()\n+ processAppeal()"]
     end
 
-    subgraph MLLayer["<<layer>>\nML-платформа"]
+    subgraph MLLayer["«layer»\nML-платформа"]
         direction TB
-        ONNX["<<component>>\nONNX Runtime\n─────────────\n+ loadModel()\n+ predict(text)\n+ getScores()"]
+        ONNX["«component»\nONNX Runtime\n─────────────\n+ loadModel()\n+ predict(text)\n+ getScores()"]
 
-        MLFLOW["<<component>>\nMLflow\nModel Registry\n─────────────\n+ registerModel()\n+ getActiveVersion()\n+ transitionStage()"]
+        MLFLOW["«component»\nMLflow\nModel Registry\n─────────────\n+ registerModel()\n+ getActiveVersion()\n+ transitionStage()"]
 
-        TRAINER["<<component>>\nTraining Orchestrator\n(Airflow)\n─────────────\n+ scheduleTrain()\n+ evaluateModel()\n+ promoteModel()"]
+        TRAINER["«component»\nTraining Orchestrator\n(Airflow)\n─────────────\n+ scheduleTrain()\n+ evaluateModel()\n+ promoteModel()"]
     end
 
-    subgraph InfraLayer["<<layer>>\nИнфраструктура"]
+    subgraph InfraLayer["«layer»\nИнфраструктура"]
         direction TB
-        KAFKA["<<component>>\nApache Kafka\n─────────────\nTopics:\n• comments.raw\n• comments.scored\n• moderation.actions"]
+        KAFKA["«component»\nApache Kafka\n─────────────\nTopics:\n• comments.raw\n• comments.scored\n• moderation.actions"]
 
-        PG["<<component>>\nPostgreSQL\n+ TimescaleDB\n─────────────\n• USER\n• COMMENT\n• PREDICTION\n• MODERATION_ACTION\n• MODEL_VERSION"]
+        PG["«component»\nPostgreSQL\n+ TimescaleDB\n─────────────\n• USER\n• COMMENT\n• PREDICTION\n• MODERATION_ACTION\n• MODEL_VERSION"]
 
-        REDIS["<<component>>\nRedis Cache\n─────────────\n+ get(key)\n+ set(key, val, ttl)\n+ del(key)"]
+        REDIS["«component»\nRedis Cache\n─────────────\n+ get(key)\n+ set(key, val, ttl)\n+ del(key)"]
 
-        S3["<<component>>\nObject Storage\n(S3-compatible)\n─────────────\n+ uploadModel()\n+ downloadModel()\n+ listVersions()"]
+        S3["«component»\nObject Storage\n(S3-compatible)\n─────────────\n+ uploadModel()\n+ downloadModel()\n+ listVersions()"]
     end
 
-    subgraph MonitoringLayer["<<layer>>\nМониторинг"]
+    subgraph MonitoringLayer["«layer»\nМониторинг"]
         direction TB
-        PROM["<<component>>\nPrometheus\n─────────────\n+ scrapeMetrics()\n+ storeTimeSeries()"]
+        PROM["«component»\nPrometheus\n─────────────\n+ scrapeMetrics()\n+ storeTimeSeries()"]
 
-        GRAF["<<component>>\nGrafana\n─────────────\n+ renderDashboard()\n+ sendAlert()"]
+        GRAF["«component»\nGrafana\n─────────────\n+ renderDashboard()\n+ sendAlert()"]
 
-        DRIFT["<<component>>\nEvidentlyAI\n─────────────\n+ calcPSI()\n+ detectDrift()\n+ generateReport()"]
+        DRIFT["«component»\nEvidentlyAI\n─────────────\n+ calcPSI()\n+ detectDrift()\n+ generateReport()"]
     end
 
     %% Client → Gateway
