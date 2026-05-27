@@ -1,0 +1,8 @@
+# Claude Code local settings
+.claude/
+
+# Typst build output
+*.pdf
+
+# macOS
+.DS_Store
